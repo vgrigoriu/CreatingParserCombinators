@@ -46,9 +46,16 @@ delegate IEnumerable<(TTree, IEnumerable<TToken>)> Parser<TTree, TToken>(IEnumer
 
 ## Basic parsers
 
-Result:
+Result, a parser that always returns the same value:
 
 ```cs
 public static Parser<TTree> Result<TTree>(TTree value) =>
     input => new[]{(value, input)};
+```
+
+Fail, a parser that always fails:
+
+```cs
+public static Parser<TTree> Fail<TTree>() =>
+    input => Enumerable.Empty<(TTree, IEnumerable<char>)>();
 ```

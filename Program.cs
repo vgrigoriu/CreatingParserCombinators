@@ -13,6 +13,13 @@ namespace ParserCombinators
             {
                 Console.WriteLine($"{result.Item1} {result.Item2}");
             }
+
+            var failParser = Fail<TimeSpan>();
+            var failResults = failParser("something else");
+            foreach (var failResult in failResults)
+            {
+                Console.WriteLine($"{failResult.Item1} {failResult.Item2}");
+            }
         }
     }
 }
