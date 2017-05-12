@@ -1,4 +1,5 @@
 ﻿using System;
+using static Parser;
 
 namespace ParserCombinators
 {
@@ -6,7 +7,12 @@ namespace ParserCombinators
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var resultParser = Result(123);
+            var results = resultParser("something");
+            foreach (var result in results)
+            {
+                Console.WriteLine($"{result.Item1} {result.Item2}");
+            }
         }
     }
 }

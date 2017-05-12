@@ -43,3 +43,12 @@ And we might need to parse something else (e.g. bytes):
 ```cs
 delegate IEnumerable<(TTree, IEnumerable<TToken>)> Parser<TTree, TToken>(IEnumerable<TToken> input);
 ```
+
+## Basic parsers
+
+Result:
+
+```cs
+public static Parser<TTree> Result<TTree>(TTree value) =>
+    input => new[]{(value, input)};
+```
