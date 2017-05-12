@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using static Parser;
 
 namespace ParserCombinators
@@ -20,6 +21,12 @@ namespace ParserCombinators
             {
                 Console.WriteLine($"{failResult.Item1} {failResult.Item2}");
             }
+
+            var itemParser = Item();
+            var oneItem = itemParser("a string").Single();
+            Console.WriteLine($"{oneItem.Item1} {string.Concat(oneItem.Item2)}");
+            var noItem = itemParser(string.Empty);
+            Console.WriteLine($"{noItem.Count()} results");
         }
     }
 }

@@ -59,3 +59,12 @@ Fail, a parser that always fails:
 public static Parser<TTree> Fail<TTree>() =>
     input => Enumerable.Empty<(TTree, IEnumerable<char>)>();
 ```
+
+Item, a parser that consumes a token and returns it:
+
+```cs
+public static Parser<char> Item() =>
+    input => (input == null || !input.Any())
+        ? new (char, IEnumerable<char>)[]{}
+        : new[]{(input.First(), input.Skip(1))};
+```
