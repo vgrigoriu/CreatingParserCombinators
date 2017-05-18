@@ -33,10 +33,6 @@ public static class Parser
             from newResult in newParser(result.Item2)
             select (selector(result.Item1, newResult.Item1), newResult.Item2);
 
-    public static Parser<U> Select<T, U>(this Parser<T> parser, Func<T, U> selector) =>
-        input => from result in parser(input)
-                 select (selector(result.Item1), result.Item2);
-
     public static Parser<char> Sat(Func<char, bool> predicate)
     {
         return Item().SelectMany(c => {

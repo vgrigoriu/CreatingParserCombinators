@@ -74,10 +74,20 @@ public static Parser<char> Item() =>
 Bind / SelectMany
 
 ```cs
-public static Parser<U> SelectMany<T, U>(this Parser<T> p, Func<T, Parser<U>> f) =>
+public static Parser<V> SelectMany<T, U, V>(
+    this Parser<T> p,
+    Func<T, Parser<U>> f,
+    Func<T, U, V> selector) =>
     input =>
         from result in p(input)
         let newParser = f(result.Item1)
         from newResult in newParser(result.Item2)
-        select newResult;
+        select (selector(result.Item1, newResult.Item1), newResult.Item2);
+```
+
+Alternative / Or
+
+```cs
+public static Parser<T> Or<T>(this Parser<T> one, Parser<T> other) =>
+    input => one(input).Concat(other(input));
 ```
