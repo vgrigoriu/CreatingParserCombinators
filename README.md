@@ -68,3 +68,16 @@ public static Parser<char> Item() =>
         ? new (char, IEnumerable<char>)[]{}
         : new[]{(input.First(), input.Skip(1))};
 ```
+
+## Parser combinators
+
+Bind / SelectMany
+
+```cs
+public static Parser<U> SelectMany<T, U>(this Parser<T> p, Func<T, Parser<U>> f) =>
+    input =>
+        from result in p(input)
+        let newParser = f(result.Item1)
+        from newResult in newParser(result.Item2)
+        select newResult;
+```

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,4 +19,30 @@ public static class Parser
         input => (input == null || !input.Any())
             ? new (char, IEnumerable<char>)[]{}
             : new[]{(input.First(), input.Skip(1))};
+
+    public static Parser<U> SelectMany<T, U>(this Parser<T> p, Func<T, Parser<U>> f) =>
+        input =>
+            from result in p(input)
+            let newParser = f(result.Item1)
+            from newResult in newParser(result.Item2)
+            select newResult;
+
+    public static Parser<char> Sat(Func<char, bool> predicate)
+    {
+        return Item().SelectMany(c => {
+            if (predicate(c))
+            {
+                return Result(c);
+            }
+            else
+            {
+                return Fail<char>();
+            }
+        });
+    }
+
+    public static Parser<char> Char(char c)
+    {
+        return Sat(x => x == c);
+    }
 }

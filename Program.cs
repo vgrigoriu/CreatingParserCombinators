@@ -27,6 +27,10 @@ namespace ParserCombinators
             Console.WriteLine($"{oneItem.Item1} {string.Concat(oneItem.Item2)}");
             var noItem = itemParser(string.Empty);
             Console.WriteLine($"{noItem.Count()} results");
+
+            var parseX = Char('x');
+            var trueX = parseX("x123").Single();
+            Console.WriteLine($"{trueX.Item1} {string.Concat(trueX.Item2)}");
         }
     }
 }
