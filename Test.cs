@@ -21,11 +21,7 @@ public static class Parser
             : new[]{(input.First(), input.Skip(1))};
 
     public static Parser<U> SelectMany<T, U>(this Parser<T> p, Func<T, Parser<U>> f) =>
-        input =>
-            from result in p(input)
-            let newParser = f(result.Item1)
-            from newResult in newParser(result.Item2)
-            select newResult;
+        p.SelectMany(f, (_, x) => x);
 
     public static Parser<V> SelectMany<T, U, V>(
         this Parser<T> p,

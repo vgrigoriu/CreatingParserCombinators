@@ -44,6 +44,21 @@ namespace ParserCombinators
             Console.WriteLine($"{lowerResult.Item1} {string.Concat(lowerResult.Item2)}");
             var upperResult = letter("Hey bau").Single();
             Console.WriteLine($"{upperResult.Item1} {string.Concat(upperResult.Item2)}");
+
+            nonEmptyWord = from first in Upper().Or(Lower()).Or(Digit())
+                           from rest in word
+                           select string.Concat(first, rest);
+            word = nonEmptyWord.Or(Result(string.Empty));
+
+            var wordResults = word("Yes123!");
+            foreach (var res in wordResults)
+            {
+                Console.WriteLine($"{res.Item1} {string.Concat(res.Item2)}");
+            }
         }
+
+        static Parser<string> word;
+
+        static Parser<string> nonEmptyWord;
     }
 }
