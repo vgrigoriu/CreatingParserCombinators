@@ -27,6 +27,20 @@ public static class Parser
             from newResult in newParser(result.Item2)
             select newResult;
 
+    public static Parser<V> SelectMany<T, U, V>(
+        this Parser<T> p,
+        Func<T, Parser<U>> f,
+        Func<T, U, V> selector) =>
+        input =>
+            from result in p(input)
+            let newParser = f(result.Item1)
+            from newResult in newParser(result.Item2)
+            select (selector(result.Item1, newResult.Item1), newResult.Item2);
+
+    public static Parser<U> Select<T, U>(this Parser<T> parser, Func<T, U> selector) =>
+        input => from result in parser(input)
+                 select (selector(result.Item1), result.Item2);
+
     public static Parser<char> Sat(Func<char, bool> predicate)
     {
         return Item().SelectMany(c => {
@@ -45,4 +59,10 @@ public static class Parser
     {
         return Sat(x => x == c);
     }
+
+    public static Parser<char> Digit() => Sat(char.IsDigit);
+
+    public static Parser<char> Lower() => Sat(char.IsLower);
+
+    public static Parser<char> Upper() => Sat(char.IsUpper);
 }

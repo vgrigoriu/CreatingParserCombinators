@@ -31,6 +31,13 @@ namespace ParserCombinators
             var parseX = Char('x');
             var trueX = parseX("x123").Single();
             Console.WriteLine($"{trueX.Item1} {string.Concat(trueX.Item2)}");
+
+            var parseLowerUpperDigit = from lower in Lower()
+                                       from upper in Upper()
+                                       from digit in Digit()
+                                       select string.Concat(lower, upper, digit);
+            var ludResult = parseLowerUpperDigit("xC6 bau").Single();
+            Console.WriteLine($"{ludResult.Item1} {string.Concat(ludResult.Item2)}");
         }
     }
 }
