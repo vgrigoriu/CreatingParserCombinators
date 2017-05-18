@@ -38,6 +38,12 @@ namespace ParserCombinators
                                        select string.Concat(lower, upper, digit);
             var ludResult = parseLowerUpperDigit("xC6 bau").Single();
             Console.WriteLine($"{ludResult.Item1} {string.Concat(ludResult.Item2)}");
+
+            var letter = Lower().Or(Upper());
+            var lowerResult = letter("xC6 bau").Single();
+            Console.WriteLine($"{lowerResult.Item1} {string.Concat(lowerResult.Item2)}");
+            var upperResult = letter("Hey bau").Single();
+            Console.WriteLine($"{upperResult.Item1} {string.Concat(upperResult.Item2)}");
         }
     }
 }

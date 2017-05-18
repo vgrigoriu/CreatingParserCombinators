@@ -65,4 +65,7 @@ public static class Parser
     public static Parser<char> Lower() => Sat(char.IsLower);
 
     public static Parser<char> Upper() => Sat(char.IsUpper);
+
+    public static Parser<T> Or<T>(this Parser<T> one, Parser<T> other) =>
+        input => one(input).Concat(other(input));
 }
