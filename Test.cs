@@ -32,7 +32,7 @@ public static class Parser
             let newParser = f(result.Item1)
             from newResult in newParser(result.Item2)
             select (selector(result.Item1, newResult.Item1), newResult.Item2);
-
+ 
     public static Parser<T> Where<T>(
         this Parser<T> parser,
         Func<T, bool> predicate)
@@ -52,4 +52,36 @@ public static class Parser
         input => one(input).Concat(other(input));
 
     public static Parser<char> Letter() => Upper().Or(Lower());
+
+    public static Parser<IEnumerable<T>> Many<T>(Parser<T> p)
+    {
+        var empty = Result(Enumerable.Empty<T>());
+        var nonEmpty = from x in p
+                       from rest in Many(p)
+                       select x.Concat(rest);
+
+        return nonEmpty.Or(empty);
+    }
+
+    public static Parser<int> Ints()
+    {
+        return from digits in Many(Digit())
+               from digitsStr in Result(string.Join(string.Empty, digits))
+               where digitsStr.Length > 0
+               select int.Parse(digitsStr);
+    }
+
+    public static Parser<U> Select<T, U>(this Parser<T> p, Func<T, U> selector)
+    {
+        return p.SelectMany(x => Result(selector(x)));
+    }
+
+    private static IEnumerable<T> Concat<T>(this T first, IEnumerable<T> rest)
+    {
+        yield return first;
+        foreach (var x in rest)
+        {
+            yield return x;
+        }
+    }
 }

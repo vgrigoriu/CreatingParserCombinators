@@ -59,6 +59,20 @@ namespace ParserCombinators
             var fourLetterWord = word.Where(x => x.Length == 4);
             var fourLetterWordResult = fourLetterWord("Abracadabra").Single();
             Console.WriteLine($"{fourLetterWordResult.Item1}");
+
+            var manyDigits = Many(Digit());
+            var manyDigitsResult = manyDigits("1234");
+            foreach (var r in manyDigitsResult)
+            {
+                Console.WriteLine($"{string.Join("", r.Item1)}-{string.Join("", r.Item2)}");
+            }
+
+            var ints = Ints();
+            var intsResult = ints("345");
+            foreach (var r in intsResult)
+            {
+                Console.WriteLine($"{r.Item1}");
+            }
         }
 
         static Parser<string> word;
