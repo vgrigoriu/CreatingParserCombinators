@@ -39,7 +39,7 @@ namespace ParserCombinators
             var ludResult = parseLowerUpperDigit("xC6 bau").Single();
             Console.WriteLine($"{ludResult.Item1} {string.Concat(ludResult.Item2)}");
 
-            var letter = Lower().Or(Upper());
+            var letter = Letter();
             var lowerResult = letter("xC6 bau").Single();
             Console.WriteLine($"{lowerResult.Item1} {string.Concat(lowerResult.Item2)}");
             var upperResult = letter("Hey bau").Single();
@@ -55,6 +55,10 @@ namespace ParserCombinators
             {
                 Console.WriteLine($"{res.Item1} {string.Concat(res.Item2)}");
             }
+
+            var fourLetterWord = word.Where(x => x.Length == 4);
+            var fourLetterWordResult = fourLetterWord("Abracadabra").Single();
+            Console.WriteLine($"{fourLetterWordResult.Item1}");
         }
 
         static Parser<string> word;

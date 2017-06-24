@@ -85,9 +85,55 @@ public static Parser<V> SelectMany<T, U, V>(
         select (selector(result.Item1, newResult.Item1), newResult.Item2);
 ```
 
+Where
+
+```cs
+public static Parser<T> Where<T>(
+    this Parser<T> parser,
+    Func<T, bool> predicate)
+{
+    return parser.SelectMany(result => predicate(result) ? Result(result) : Fail<T>());
+}
+```
+
+A parser that matches one particular character
+
+```cs
+public static Parser<char> Char(char c) =>
+    Item().Where(x => x == c);
+
+var bParser = Char('b');
+```
+
+Parsers that match classes of characters
+
+```cs
+    public static Parser<char> Digit() => Item().Where(char.IsDigit);
+
+    public static Parser<char> Lower() => Item().Where(char.IsLower);
+
+    public static Parser<char> Upper() => Item().Where(char.IsUpper);
+```
+
 Alternative / Or
 
 ```cs
 public static Parser<T> Or<T>(this Parser<T> one, Parser<T> other) =>
     input => one(input).Concat(other(input));
+```
+
+Any letter
+
+```cs
+var letter = Lower().Or(Upper());
+```
+
+A word of any length (returns multiple matches)
+
+```cs
+nonEmptyWord = from first in Upper().Or(Lower()).Or(Digit())
+               from rest in word
+               select string.Concat(first, rest);
+
+word = nonEmptyWord.Or(Result(string.Empty));
 ```

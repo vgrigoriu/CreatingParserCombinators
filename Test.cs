@@ -33,31 +33,23 @@ public static class Parser
             from newResult in newParser(result.Item2)
             select (selector(result.Item1, newResult.Item1), newResult.Item2);
 
-    public static Parser<char> Sat(Func<char, bool> predicate)
+    public static Parser<T> Where<T>(
+        this Parser<T> parser,
+        Func<T, bool> predicate)
     {
-        return Item().SelectMany(c => {
-            if (predicate(c))
-            {
-                return Result(c);
-            }
-            else
-            {
-                return Fail<char>();
-            }
-        });
+        return parser.SelectMany(result => predicate(result) ? Result(result) : Fail<T>());
     }
 
-    public static Parser<char> Char(char c)
-    {
-        return Sat(x => x == c);
-    }
+    public static Parser<char> Char(char c) => Item().Where(x => x == c);
 
-    public static Parser<char> Digit() => Sat(char.IsDigit);
+    public static Parser<char> Digit() => Item().Where(char.IsDigit);
 
-    public static Parser<char> Lower() => Sat(char.IsLower);
+    public static Parser<char> Lower() => Item().Where(char.IsLower);
 
-    public static Parser<char> Upper() => Sat(char.IsUpper);
+    public static Parser<char> Upper() => Item().Where(char.IsUpper);
 
     public static Parser<T> Or<T>(this Parser<T> one, Parser<T> other) =>
         input => one(input).Concat(other(input));
+
+    public static Parser<char> Letter() => Upper().Or(Lower());
 }
